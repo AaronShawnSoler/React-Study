@@ -3,10 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: null,
+        };
+    }
+
     render() {
-        console.log(this.props)
         return (
-            <button className="square">
+            <button 
+                className="square" 
+                onClick={() => this.props.onClick()} // calls onClick defined in board component
+            >
                 {this.props.value}
             </button>
         );
@@ -14,8 +23,26 @@ class Square extends React.Component {
 }
 
 class Board extends React.Component {
+    constructor(props) {
+        super(props); // always need super props
+        this.state = {
+            squares: Array(9).fill(null),
+        };
+    }
+
+    handleClick(i) {
+        const squares = this.state.squares.slice(); // make copy of state
+        squares[i] = 'X';                           // alter copy
+        this.setState({squares: squares})           // set current state to modified state
+    }
+
     renderSquare(i) {
-        return <Square value={i} />;    
+        return (
+            <Square 
+                value={this.state.squares[i]}       // render square component with value of square index 
+                onClick={() => this.handleClick(i)} // handleClick changes value of square index
+            />
+        );    
     }
 
     render() {
